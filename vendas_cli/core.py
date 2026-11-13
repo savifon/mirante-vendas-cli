@@ -1,7 +1,12 @@
 import csv
+import logging
+
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -12,31 +17,65 @@ class Venda:
     data: date | None = None
 
 
-def ler_vendas(caminho: str) -> list [Venda]:
+def ler_vendas(caminho: str) -> list[Venda]:
     vendas: list[Venda] = []
 
-    with open(caminho, encoding="utf-8", newline="") as arquivo:
+    try:
+        arquivo_aberto = open(caminho, encoding="utf-8", newline="")
+    except FileNotFoundError:
+        logger.error("Arquivo não foi encontrado: %s", caminho)
+        raise
+
+    with arquivo_aberto as arquivo:
         leitor = csv.DictReader(arquivo)
 
         colunas_obrigatorias = {"produto", "quantidade", "preco_unitario"}
         colunas_faltantes = colunas_obrigatorias - set(leitor.fieldnames or [])
 
         if colunas_faltantes:
+            logger.error(
+                "Colunas ausentes: %s",
+                ", ".join(sorted(colunas_faltantes)),
+            )
             raise ValueError(
-                f"Colunas ausentes: {', '.join(faltantes)}"
+                f"Colunas ausentes: {', '.join(sorted(colunas_faltantes))}"
             )
         
-        for linha in leitor:
-            data_texto = (linha.get("data") or "").strip()
+        for numero_linha, linha in enumerate(leitor, start=2):
+            try:
+                data_texto = (linha.get("data") or "").strip()
 
-            venda = Venda(
-                produto=linha["produto"].strip(),
-                quantidade=int(linha["quantidade"]),
-                preco_unitario=Decimal(linha["preco_unitario"]),
-                data=date.fromisoformat(data_texto) if data_texto else None,
-            )
+                venda = Venda(
+                    produto=linha["produto"].strip(),
+                    quantidade=int(linha["quantidade"]),
+                    preco_unitario=Decimal(linha["preco_unitario"]),
+                    data=date.fromisoformat(data_texto) if data_texto else None,
+                )
+            except (KeyError, ValueError, TypeError) as erro:
+                logger.warning(
+                    "Linha %d ignorada: %s",
+                    numero_linha,
+                    erro,
+                )
+                continue
+
+            if not venda.produto:
+                logger.warning(
+                    "Linha %d ignorada: produto vazio.",
+                    numero_linha,
+                )
+                continue
+
+            if venda.quantidade <= 0:
+                logger.warning(
+                    "Linha %d ignorada: quantidade deve ser maior que zero.",
+                    numero_linha,
+                )
+                continue
 
             vendas.append(venda)
+
+        logger.info("Leitura concluída: %d venda(s) válida(s).", len(vendas))
     
     return vendas
 

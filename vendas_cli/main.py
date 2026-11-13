@@ -8,15 +8,28 @@ from vendas_cli.core import (
 from vendas_cli.output import formatar_texto, formatar_json
 from vendas_cli.parser import parse_args
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 def main() -> int:
     argumentos = parse_args()
 
-    vendas = filtrar_por_periodo(
-        vendas=ler_vendas(argumentos.arquivo),
-        inicio=argumentos.inicio,
-        fim=argumentos.fim,
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(levelname)s: %(message)s",
     )
+
+    try:
+        vendas = filtrar_por_periodo(
+            vendas=ler_vendas(argumentos.arquivo),
+            inicio=argumentos.inicio,
+            fim=argumentos.fim,
+        )
+    except (FileNotFoundError, ValueError):
+        return 1
 
     totais = total_por_produto(vendas)
     total = total_geral(vendas)
