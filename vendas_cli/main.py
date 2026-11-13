@@ -14,8 +14,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def main(argumentos: list[str] | None = None) -> int:
-    argumentos = parse_args(argumentos)
+def main(argv: list[str] | None = None) -> int:
+    argumentos = parse_args(argv)
 
     logging.basicConfig(
         level=logging.INFO,
