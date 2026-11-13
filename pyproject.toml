@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vendas-cli"
+version = "0.1.0"
+description = "Relatórios de vendas a partir de um CSV."
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "mypy"]
+
+[project.scripts]
+vendas-cli = "vendas_cli.main:main"
+
+[tool.setuptools.packages.find]
+include = ["vendas_cli*"]
