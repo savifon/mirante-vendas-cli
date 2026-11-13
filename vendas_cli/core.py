@@ -3,7 +3,7 @@ import logging
 
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ def ler_vendas(caminho: str) -> list[Venda]:
                     preco_unitario=Decimal(linha["preco_unitario"]),
                     data=date.fromisoformat(data_texto) if data_texto else None,
                 )
-            except (KeyError, ValueError, TypeError) as erro:
+            except (KeyError, ValueError, TypeError, InvalidOperation) as erro:
                 logger.warning(
                     "Linha %d ignorada: %s",
                     numero_linha,
