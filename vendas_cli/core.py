@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Venda:
+    """Representa uma venda registrada no CSV."""
+
     produto: str
     quantidade: int
     preco_unitario: Decimal
@@ -18,6 +20,8 @@ class Venda:
 
 
 def ler_vendas(caminho: str) -> list[Venda]:
+    """Lê e valida um CSV de vendas e retorna uma lista de objetos Venda."""
+
     vendas: list[Venda] = []
 
     try:
@@ -85,6 +89,8 @@ def filtrar_por_periodo(
     inicio: date | None,
     fim: date | None,
 ) -> list[Venda]:
+    """Filtra vendas dentro do intervalo informado. Vendas sem data sao ignoradas."""
+
     vendas_filtradas = vendas
 
     if inicio is not None:
@@ -105,6 +111,8 @@ def filtrar_por_periodo(
 
 
 def total_por_produto(vendas: list[Venda]) -> dict[str, Decimal]:
+    """Calcula o valor total de vndas por produto."""
+
     totais: dict[str, Decimal] = {}
 
     for venda in vendas:
@@ -115,6 +123,8 @@ def total_por_produto(vendas: list[Venda]) -> dict[str, Decimal]:
 
 
 def total_geral(vendas: list[Venda]) -> Decimal:
+    """Calcula o valor total de todas as vendas."""
+
     return sum(
         total_por_produto(vendas).values(),
         start=Decimal("0")
@@ -122,6 +132,8 @@ def total_geral(vendas: list[Venda]) -> Decimal:
 
 
 def produto_mais_vendido(vendas: list[Venda]) -> str | None:
+    """Retorna o produto com maior quantidade vendida (ou None, se não houver vendas)."""
+
     quantidades: dict[str, int] = {}
 
     for venda in vendas:

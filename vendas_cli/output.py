@@ -7,6 +7,8 @@ def formatar_texto(
     total: Decimal,
     mais_vendido: str | None
 ) -> str:
+    """Gera o relatório de vendas em formato de tabela para o terminal."""
+
     linhas = [
         "Relatório de vendas",
         "",
@@ -37,6 +39,8 @@ def formatar_json(
     total: Decimal,
     mais_vendido: str | None,
 ) -> str:
+    """Gera o relatório em JSON com valores monetários em decimais."""
+
     dados = {
         "total_por_produto": {
             produto: str(valor)

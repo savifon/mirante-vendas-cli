@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Executa CLI: lê o CSV, aplica o filtro e exibe relatório em texto ou JSON."""
+
     argumentos = parse_args(argv)
 
     logging.basicConfig(

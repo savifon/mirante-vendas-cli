@@ -3,6 +3,8 @@ from datetime import date
 
 
 def parse_args(argumentos: list[str] | None = None) -> argparse.Namespace:
+    """Interpreta os argumentos da linha de comando e valida o intervalo de datas."""
+
     parser = argparse.ArgumentParser(
         description="Gera um relatório de vendas a partir de um CSV."
     )
