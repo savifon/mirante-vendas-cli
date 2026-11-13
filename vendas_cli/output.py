@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 
 
@@ -29,3 +30,20 @@ def formatar_texto(
     )
 
     return "\n".join(linhas)
+
+
+def formatar_json(
+    totais: dict[str, Decimal],
+    total: Decimal,
+    mais_vendido: str | None,
+) -> str:
+    dados = {
+        "total_por_produto": {
+            produto: str(valor)
+            for produto, valor in totais.items()
+        },
+        "total_geral": str(total),
+        "produto_mais_vendido": mais_vendido,
+    }
+
+    return json.dumps(dados, ensure_ascii=False, indent=2)

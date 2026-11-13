@@ -41,6 +41,30 @@ def ler_vendas(caminho: str) -> list [Venda]:
     return vendas
 
 
+def filtrar_por_periodo(
+    vendas: list[Venda],
+    inicio: date | None,
+    fim: date | None,
+) -> list[Venda]:
+    vendas_filtradas = vendas
+
+    if inicio is not None:
+        vendas_filtradas = [
+            venda
+            for venda in vendas_filtradas
+            if venda.data is not None and venda.data >= inicio
+        ]
+
+    if fim is not None:
+        vendas_filtradas = [
+            venda
+            for venda in vendas_filtradas
+            if venda.data is not None and venda.data <= fim
+        ]
+
+    return vendas_filtradas
+
+
 def total_por_produto(vendas: list[Venda]) -> dict[str, Decimal]:
     totais: dict[str, Decimal] = {}
 
